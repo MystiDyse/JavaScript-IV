@@ -7,40 +7,38 @@ Prototype Refactor
 2. Your goal is to refactor all of this code to use ES6 Classes. The console.log() statements should still return what is expected of them.
 
 */
-function GameObject(attributes) {
-    this.createdAt = attributes.createdAt;
-    this.name = attributes.name;
-    this.dimensions = attributes.dimensions;
+class GameObject {
+    constructor(attributes) {
+        this.createdAt = attributes.createdAt;
+        this.name = attributes.name;
+        this.dimensions = attributes.dimensions;
+    }
+    destroy () {
+        return `${this.name} was removed from the game.`
+    }
   }
-GameObject.prototype.destroy = function() {
-    return `${this.name} was removed from the game.`
+
+class CharacterStats extends GameObject {
+    constructor(childAttributes) {
+        super(childAttributes);
+        this.healthPoints = childAttributes.healthPoints;
+    }
+    takeDamage () {
+        return `${this.name} took damage.` 
+    }
+}
+
+class Humanoid extends CharacterStats {
+  constructor(attribute) {
+    super (attribute);
+    this.team = attribute.team;
+    this.weapons = attribute.weapons;
+    this.language = attribute.language;
   }
-
-CharacterStats.prototype = Object.create(GameObject.prototype);
-
-function CharacterStats(childAttributes) {
-  GameObject.call(this, childAttributes);
-  this.healthPoints = childAttributes.healthPoints;
-  // function Child(childAttributes) {
-//   Person.call(this, childAttributes); // binding this to Person
-//   this.isChild = childAttributes.isChild; // this will be a special attribute to Child
-// }
+  greet () {
+    return `${this.name} offers a greeting in ${this.language}.`
+  }
 }
-CharacterStats.prototype.takeDamage = function() {
-  return `${this.name} took damage.` 
-};
-
-Humanoid.prototype = Object.create(CharacterStats.prototype);
-
-function Humanoid(attribute) {
-  CharacterStats.call(this, attribute);
-  this.team = attribute.team;
-  this.weapons = attribute.weapons;
-  this.language = attribute.language;
-}
-Humanoid.prototype.greet = function() {
-  return `${this.name} offers a greeting in ${this.language}.`
-};
 
 const mage = new Humanoid({
     createdAt: new Date(),
